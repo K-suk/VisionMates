@@ -24,12 +24,16 @@ export default function CommentForm({ onSubmit }: Props) {
       setPending(true);
       await onSubmit(parsed.data);
       setBody("");
-    } catch (e: any) {
-      setError(e?.message ?? "Failed to submit comment");
-    } finally {
-      setPending(false);
+      } catch (e) {
+        if (e instanceof Error) {
+          setError(e.message);
+        } else {
+          setError("Failed to submit comment");
+        }
+      } finally {
+        setPending(false);
+      }
     }
-  }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-2">

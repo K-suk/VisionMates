@@ -2,6 +2,25 @@ import AuthGate from "@/components/AuthGate";
 import { createServerClient } from "@/lib/supabase/server";
 import NotifyBell from "@/components/NotifyBell";
 
+type Project = {
+  id: string;
+  title: string;
+  summary: string;
+  created_at: string;
+};
+
+type Intent = {
+  project_id: string;
+  level: string;
+};
+
+type Notification = {
+  id: string;
+  type: string;
+  is_read: boolean;
+  created_at: string;
+};
+
 async function DashboardContent() {
   const supabase = createServerClient();
   const {
@@ -32,12 +51,14 @@ async function DashboardContent() {
     <div className="max-w-4xl mx-auto p-6 space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-heading text-wood">Dashboard</h1>
-        <NotifyBell count={(myNotifs ?? []).filter((n: any) => !n.is_read).length} />
+        <NotifyBell
+          count={((myNotifs ?? []) as Notification[]).filter((n) => !n.is_read).length}
+        />
       </div>
       <section className="paper pixel-border rounded p-4">
         <h2 className="text-xl font-heading text-wood mb-3">My Projects</h2>
         <ul className="space-y-2">
-          {(myProjects ?? []).map((p) => (
+          {((myProjects ?? []) as Project[]).map((p) => (
             <li key={p.id} className="text-stone-800">
               <a href={`/projects/${p.id}`} className="text-wood underline">
                 {p.title}
@@ -45,7 +66,7 @@ async function DashboardContent() {
               <span className="text-stone-600"> — {p.summary}</span>
             </li>
           ))}
-          {(!myProjects || myProjects.length === 0) && (
+          {(!myProjects || ((myProjects as Project[]) ?? []).length === 0) && (
             <li className="text-stone-600">No projects yet.</li>
           )}
         </ul>
@@ -54,12 +75,12 @@ async function DashboardContent() {
       <section className="paper pixel-border rounded p-4">
         <h2 className="text-xl font-heading text-wood mb-3">My Intents</h2>
         <ul className="space-y-2">
-          {(myIntents ?? []).map((i) => (
+          {((myIntents ?? []) as Intent[]).map((i) => (
             <li key={i.project_id} className="text-stone-800">
               Project {i.project_id} — {i.level}
             </li>
           ))}
-          {(!myIntents || myIntents.length === 0) && (
+          {(!myIntents || ((myIntents as Intent[]) ?? []).length === 0) && (
             <li className="text-stone-600">No intents yet.</li>
           )}
         </ul>
@@ -68,12 +89,12 @@ async function DashboardContent() {
       <section className="paper pixel-border rounded p-4">
         <h2 className="text-xl font-heading text-wood mb-3">Notifications</h2>
         <ul className="space-y-2">
-          {(myNotifs ?? []).map((n) => (
+          {((myNotifs ?? []) as Notification[]).map((n) => (
             <li key={n.id} className="text-stone-800">
               [{n.type}] {new Date(n.created_at).toLocaleString()} {n.is_read ? "(read)" : ""}
             </li>
           ))}
-          {(!myNotifs || myNotifs.length === 0) && (
+          {(!myNotifs || ((myNotifs as Notification[]) ?? []).length === 0) && (
             <li className="text-stone-600">No notifications.</li>
           )}
         </ul>

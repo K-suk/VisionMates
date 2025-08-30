@@ -62,14 +62,14 @@ export default function IntentButtons({ initial = null, onSelect }: Props) {
   function handleClick(level: Level, e: React.MouseEvent<HTMLButtonElement>) {
     setOptimisticLevel(level);
     if (!onSelect) return;
-    startTransition(async () => {
-      try {
-        await onSelect(level);
-      } catch (e) {
-        // revert on failure
-        setOptimisticLevel(initial);
-      }
-    });
+      startTransition(async () => {
+        try {
+          await onSelect(level);
+        } catch {
+          // revert on failure
+          setOptimisticLevel(initial);
+        }
+      });
     const el = e.currentTarget;
     el.style.position = el.style.position || "relative";
     burst(el);

@@ -20,14 +20,15 @@ export default async function ProjectsPage({
   const { data: tags } = await supabase.from("tags").select("id,name").order("name");
 
   let projectIdsByTag: string[] | undefined = undefined;
-  if (tagId && !Number.isNaN(tagId)) {
-    const { data: tagRows } = await supabase
-      .from("project_tags")
-      .select("project_id")
-      .eq("tag_id", tagId);
-    projectIdsByTag = (tagRows ?? []).map((r: any) => r.project_id);
-    if (projectIdsByTag.length === 0) projectIdsByTag = ["00000000-0000-0000-0000-000000000000"]; // no results guard
-  }
+    if (tagId && !Number.isNaN(tagId)) {
+      const { data: tagRows } = await supabase
+        .from("project_tags")
+        .select("project_id")
+        .eq("tag_id", tagId);
+      projectIdsByTag = (tagRows ?? []).map((r: { project_id: string }) => r.project_id);
+      if (projectIdsByTag.length === 0)
+        projectIdsByTag = ["00000000-0000-0000-0000-000000000000"]; // no results guard
+    }
 
   let query = supabase
     .from("projects")

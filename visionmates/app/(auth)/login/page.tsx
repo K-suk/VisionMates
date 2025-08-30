@@ -26,8 +26,12 @@ export default function LoginPage() {
       });
       if (error) throw error;
       setMessage("Check your email for a magic sign-in link.");
-    } catch (err: any) {
-      setMessage(err?.message ?? "Failed to send magic link");
+    } catch (err) {
+      if (err instanceof Error) {
+        setMessage(err.message);
+      } else {
+        setMessage("Failed to send magic link");
+      }
     } finally {
       setLoading(false);
     }
@@ -46,8 +50,12 @@ export default function LoginPage() {
       if (error) throw error;
       // Redirect handled by Supabase
       return data;
-    } catch (err: any) {
-      setMessage(err?.message ?? "Google sign-in failed");
+    } catch (err) {
+      if (err instanceof Error) {
+        setMessage(err.message);
+      } else {
+        setMessage("Google sign-in failed");
+      }
     } finally {
       setLoading(false);
     }

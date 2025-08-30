@@ -2,9 +2,21 @@ import { notFound } from "next/navigation";
 import { createServerClient } from "@/lib/supabase/server";
 import IntentButtons from "@/components/IntentButtons";
 import UpdateTimeline from "@/components/UpdateTimeline";
-import CommentList from "@/components/CommentList";
-import CommentForm from "@/components/CommentForm";
 import ClientComments from "./section.client";
+
+type Update = {
+  id: string;
+  author_id: string;
+  body: string;
+  created_at: string;
+};
+
+type Comment = {
+  id: string;
+  author_id: string;
+  body: string;
+  created_at: string;
+};
 
 export default async function ProjectDetail({ params }: { params: { id: string } }) {
   const supabase = createServerClient();
@@ -46,10 +58,10 @@ export default async function ProjectDetail({ params }: { params: { id: string }
         </section>
       )}
       <section className="paper pixel-border rounded p-4">
-        <h3 className="text-lg font-heading text-wood mb-2">Updates</h3>
-        <UpdateTimeline updates={(updates ?? []) as any} />
-      </section>
-      <ClientComments initialComments={(comments ?? []) as any} />
-    </div>
-  );
-}
+          <h3 className="text-lg font-heading text-wood mb-2">Updates</h3>
+          <UpdateTimeline updates={(updates ?? []) as Update[]} />
+        </section>
+        <ClientComments initialComments={(comments ?? []) as Comment[]} />
+      </div>
+    );
+  }

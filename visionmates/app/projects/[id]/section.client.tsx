@@ -4,11 +4,19 @@ import { useState } from "react";
 import CommentList from "@/components/CommentList";
 import CommentForm from "@/components/CommentForm";
 
-export default function ClientComments({ initialComments }: { initialComments: any[] }) {
-  const [items, setItems] = useState<any[]>(initialComments);
+type Comment = {
+  id: string;
+  body: string;
+  author_name?: string;
+  author_id?: string;
+  created_at?: string;
+};
+
+export default function ClientComments({ initialComments }: { initialComments: Comment[] }) {
+  const [items, setItems] = useState<Comment[]>(initialComments);
 
   async function onSubmit(values: { body: string }) {
-    const temp = {
+    const temp: Comment = {
       id: `temp-${Date.now()}`,
       body: values.body,
       author_name: "You",
@@ -21,7 +29,7 @@ export default function ClientComments({ initialComments }: { initialComments: a
   return (
     <section className="paper pixel-border rounded p-4 space-y-4">
       <h3 className="text-lg font-heading text-wood mb-2">Comments</h3>
-      <CommentList comments={items as any} />
+      <CommentList comments={items} />
       <CommentForm onSubmit={onSubmit} />
     </section>
   );
